@@ -44,3 +44,17 @@ fn mut_string_push_str(b: &mut Bencher) {
         _datetime.push_str(TIME);
     });
 }
+
+#[bench]
+fn array_concat(b: &mut Bencher) {
+    b.iter(||{
+        let mut _datetime = [ DATE, "T", TIME ].concat();
+    });
+}
+
+#[bench]
+fn array_join(b: &mut Bencher) {
+    b.iter(||{
+        let mut datetime = [ "2014-11-28", "12:00:09Z" ].join("T");
+    });
+}
