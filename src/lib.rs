@@ -61,7 +61,7 @@ fn array_concat(b: &mut Bencher) {
 #[bench]
 fn array_join(b: &mut Bencher) {
     b.iter(||{
-        let datetime = [ "2014-11-28", "12:00:09Z" ].join("T");
+        let datetime = [ DATE, TIME ].join("T");
         test::black_box(datetime);
     });
 }
