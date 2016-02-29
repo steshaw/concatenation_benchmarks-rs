@@ -53,7 +53,7 @@ fn mut_string_push_str(b: &mut Bencher) {
 #[bench]
 fn array_concat(b: &mut Bencher) {
     b.iter(||{
-        let mut datetime = [ DATE, "T", TIME ].concat();
+        let datetime = [ DATE, "T", TIME ].concat();
         test::black_box(datetime);
     });
 }
@@ -61,7 +61,7 @@ fn array_concat(b: &mut Bencher) {
 #[bench]
 fn array_join(b: &mut Bencher) {
     b.iter(||{
-        let mut datetime = [ "2014-11-28", "12:00:09Z" ].join("T");
+        let datetime = [ "2014-11-28", "12:00:09Z" ].join("T");
         test::black_box(datetime);
     });
 }
