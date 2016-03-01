@@ -10,7 +10,7 @@ use test::Bencher;
 #[bench]
 fn format_macro(b: &mut Bencher) {
     b.iter(||{
-        let datetime = format!("{}T{}", DATE, TIME);
+        let datetime:&str = &format!("{}T{}", DATE, TIME);
         test::black_box(datetime);
     });
 }
@@ -18,7 +18,7 @@ fn format_macro(b: &mut Bencher) {
 #[bench]
 fn to_string_plus_op(b: &mut Bencher) {
     b.iter(||{
-        let datetime = &(DATE.to_string() + "T" + TIME);
+        let datetime:&str = &(DATE.to_string() + "T" + TIME);
         test::black_box(datetime);
     });
 }
@@ -26,7 +26,7 @@ fn to_string_plus_op(b: &mut Bencher) {
 #[bench]
 fn to_owned_plus_op(b: &mut Bencher) {
     b.iter(||{
-        let datetime = &(DATE.to_owned() + "T" + TIME);
+        let datetime:&str = &(DATE.to_owned() + "T" + TIME);
         test::black_box(datetime);
     });
 }
@@ -34,7 +34,15 @@ fn to_owned_plus_op(b: &mut Bencher) {
 #[bench]
 fn string_from_plus_op(b: &mut Bencher) {
     b.iter(||{
-        let datetime = &(String::from(DATE) + "T" + TIME);
+        let datetime:&str = &(String::from(DATE) + "T" + TIME);
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
+fn string_from_all(b: &mut Bencher) {
+    b.iter(||{
+        let datetime:&str = &(String::from(DATE) + &String::from("T") + &String::from(TIME));
         test::black_box(datetime);
     });
 }
@@ -53,7 +61,7 @@ fn mut_string_push_str(b: &mut Bencher) {
 #[bench]
 fn array_concat(b: &mut Bencher) {
     b.iter(||{
-        let datetime = [ DATE, "T", TIME ].concat();
+        let datetime:&str = &[ DATE, "T", TIME ].concat();
         test::black_box(datetime);
     });
 }
@@ -61,7 +69,16 @@ fn array_concat(b: &mut Bencher) {
 #[bench]
 fn array_join(b: &mut Bencher) {
     b.iter(||{
-        let datetime = [ DATE, TIME ].join("T");
+        let datetime:&str = &[ DATE, TIME ].join("T");
         test::black_box(datetime);
     });
 }
+
+// funny, the presence of this benchmark makes the join() version slower
+//#[bench]
+//fn array_connect(b: &mut Bencher) {
+//    b.iter(||{
+//        let datetime:&str = &[ DATE, TIME ].connect("T");
+//        test::black_box(datetime);
+//    });
+//}
