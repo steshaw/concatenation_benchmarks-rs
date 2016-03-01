@@ -52,8 +52,18 @@ fn write_macro(b: &mut Bencher) {
     b.iter(||{
         use std::io::Write;
         let mut datetime = Vec::new();
-        write!(&mut datetime, "{}T{}", DATE,TIME);
+        write!(&mut datetime, "{}T{}", DATE,TIME).unwrap();
+        test::black_box(datetime);
+    });
+}
 
+#[bench]
+fn mut_string_with_capacity_push_str(b: &mut Bencher){
+    b.iter(||{
+        let mut datetime = String::with_capacity(20);
+        datetime.push_str(DATE);
+        datetime.push_str("T");
+        datetime.push_str(TIME);
         test::black_box(datetime);
     });
 }
