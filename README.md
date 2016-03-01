@@ -4,10 +4,6 @@ There are many ways to turn a `&str` into a `String` in Rust and therefore many 
 
 Here are benchmarks that show what is slow and fast.
 
-## Contribution
-
-I'd be happy to add more benchmarks if you send me PRs with other ways to do it.
-
 ## Results on my machine
 
 ```
@@ -24,3 +20,64 @@ test to_string_plus_op   ... bench:          86 ns/iter (+/- 3)
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 7 measured
 ```
+
+## Examples so far
+
+
+```rust
+let DATE = "2014-11-28";
+let TIME = "12:00:09Z";
+```
+
+
+### `format!` macro
+
+
+```rust
+let datetime = format!("{}T{}", DATE, TIME);
+```
+
+### `push_str()` into `mut String`
+
+```rust
+let mut datetime = String::new();
+        datetime.push_str(DATE);
+        datetime.push_str("T");
+        datetime.push_str(TIME);
+```
+
+### `String::from()` and +operator
+
+```rust
+let datetime = &(String::from(DATE) + "T" + TIME);
+```
+
+### `.to_string()` and +operator
+
+
+```rust
+let datetime = &(DATE.to_string() + "T" + TIME);
+```
+
+### `.to_owned()` and +operator
+
+```rust
+let datetime = &(DATE.to_owned() + "T" + TIME);
+```
+
+### array `.concat()`
+
+```rust
+let datetime = [ DATE, "T", TIME ].concat();
+```
+
+### array `.join()`
+
+```rust
+let datetime = [ DATE, TIME ].join("T");
+```
+
+## Contribution
+
+I'd be happy to add more benchmarks if you send me PRs with other ways to do it.
+
