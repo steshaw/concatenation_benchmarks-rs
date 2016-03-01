@@ -27,8 +27,28 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 7 measured
 ```rust
 let DATE = "2014-11-28";
 let TIME = "12:00:09Z";
+
+// wanting to create
+
+let datetime = "2014-11-28T12:00:09Z";
+
 ```
 
+
+### array `.concat()`
+
+```rust
+let datetime = [ DATE, "T", TIME ].concat();
+```
+
+### array `.join()`
+
+```rust
+let datetime = [ DATE, TIME ].join("T");
+```
+
+Interestingly, this is as slow as `concat()` in the presence of another benchmark with join or connect.
+Check out the commented benchmarks.
 
 ### `format!` macro
 
@@ -63,18 +83,6 @@ let datetime = &(DATE.to_string() + "T" + TIME);
 
 ```rust
 let datetime = &(DATE.to_owned() + "T" + TIME);
-```
-
-### array `.concat()`
-
-```rust
-let datetime = [ DATE, "T", TIME ].concat();
-```
-
-### array `.join()`
-
-```rust
-let datetime = [ DATE, TIME ].join("T");
 ```
 
 ## Contribution
