@@ -48,6 +48,29 @@ fn string_from_all(b: &mut Bencher) {
 }
 
 #[bench]
+fn write_macro(b: &mut Bencher) {
+    b.iter(||{
+        use std::io::Write;
+        let mut datetime = Vec::new();
+        write!(&mut datetime, "{}T{}", DATE,TIME);
+
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
+fn mut_string_push_string(b: &mut Bencher) {
+    b.iter(||{
+        let mut datetime = Vec::<String>::new();
+        datetime.push(String::from(DATE));
+        datetime.push(String::from("T"));
+        datetime.push(String::from(TIME));
+        let datetime = datetime.join("");
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
 fn mut_string_push_str(b: &mut Bencher) {
     b.iter(||{
         let mut datetime = String::new();
@@ -82,3 +105,13 @@ fn array_join(b: &mut Bencher) {
 //        test::black_box(datetime);
 //    });
 //}
+
+// adding this one also makes array_join() slower
+//#[bench]
+//fn array_join_long(b: &mut Bencher) {
+//    b.iter(||{
+//        let datetime:&str = &[ DATE, "T", TIME ].join("");
+//        test::black_box(datetime);
+//    });
+//}
+
