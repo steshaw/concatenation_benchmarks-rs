@@ -1,4 +1,4 @@
-#Comparing ways to concatenate strings in Rusts
+#Comparing ways to concatenate strings in rust
 
 There are many ways to turn a `&str` into a `String` in Rust and therefore many ways to concatenate two `&str`s.
 
