@@ -9,7 +9,7 @@ use test::Bencher;
 
 #[bench]
 fn format_macro(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &format!("{}T{}", DATE, TIME);
         test::black_box(datetime);
     });
@@ -17,7 +17,7 @@ fn format_macro(b: &mut Bencher) {
 
 #[bench]
 fn to_string_plus_op(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &(DATE.to_string() + "T" + TIME);
         test::black_box(datetime);
     });
@@ -25,7 +25,7 @@ fn to_string_plus_op(b: &mut Bencher) {
 
 #[bench]
 fn to_owned_plus_op(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &(DATE.to_owned() + "T" + TIME);
         test::black_box(datetime);
     });
@@ -33,7 +33,7 @@ fn to_owned_plus_op(b: &mut Bencher) {
 
 #[bench]
 fn string_from_plus_op(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &(String::from(DATE) + "T" + TIME);
         test::black_box(datetime);
     });
@@ -41,7 +41,7 @@ fn string_from_plus_op(b: &mut Bencher) {
 
 #[bench]
 fn string_from_all(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &(String::from(DATE) + &String::from("T") + &String::from(TIME));
         test::black_box(datetime);
     });
@@ -49,7 +49,7 @@ fn string_from_all(b: &mut Bencher) {
 
 #[bench]
 fn write_macro(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         use std::io::Write;
         let mut datetime = Vec::new();
         write!(&mut datetime, "{}T{}", DATE,TIME).unwrap();
@@ -58,8 +58,8 @@ fn write_macro(b: &mut Bencher) {
 }
 
 #[bench]
-fn mut_string_with_capacity_push_str(b: &mut Bencher){
-    b.iter(||{
+fn mut_string_with_capacity_push_str(b: &mut Bencher) {
+    b.iter(|| {
         let mut datetime = String::with_capacity(20);
         datetime.push_str(DATE);
         datetime.push_str("T");
@@ -69,8 +69,19 @@ fn mut_string_with_capacity_push_str(b: &mut Bencher){
 }
 
 #[bench]
+fn mut_string_with_capacity_push_str_char(b: &mut Bencher) {
+    b.iter(|| {
+        let mut datetime = String::with_capacity(20);
+        datetime.push_str(DATE);
+        datetime.push('T');
+        datetime.push_str(TIME);
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
 fn mut_string_push_string(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let mut datetime = Vec::<String>::new();
         datetime.push(String::from(DATE));
         datetime.push(String::from("T"));
@@ -82,7 +93,7 @@ fn mut_string_push_string(b: &mut Bencher) {
 
 #[bench]
 fn mut_string_push_str(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let mut datetime = String::new();
         datetime.push_str(DATE);
         datetime.push_str("T");
@@ -93,7 +104,7 @@ fn mut_string_push_str(b: &mut Bencher) {
 
 #[bench]
 fn array_concat(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &[ DATE, "T", TIME ].concat();
         test::black_box(datetime);
     });
@@ -101,7 +112,7 @@ fn array_concat(b: &mut Bencher) {
 
 #[bench]
 fn array_join(b: &mut Bencher) {
-    b.iter(||{
+    b.iter(|| {
         let datetime:&str = &[ DATE, TIME ].join("T");
         test::black_box(datetime);
     });
@@ -110,7 +121,7 @@ fn array_join(b: &mut Bencher) {
 // funny, the presence of this benchmark makes the join() version slower
 //#[bench]
 //fn array_connect(b: &mut Bencher) {
-//    b.iter(||{
+//    b.iter(|| {
 //        let datetime:&str = &[ DATE, TIME ].connect("T");
 //        test::black_box(datetime);
 //    });
@@ -119,7 +130,7 @@ fn array_join(b: &mut Bencher) {
 // adding this one also makes array_join() slower
 //#[bench]
 //fn array_join_long(b: &mut Bencher) {
-//    b.iter(||{
+//    b.iter(|| {
 //        let datetime:&str = &[ DATE, "T", TIME ].join("");
 //        test::black_box(datetime);
 //    });
