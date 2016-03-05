@@ -3,6 +3,7 @@
 There are many ways to turn a `&str` into a `String` in Rust and therefore many ways to concatenate two `&str`s.
 
 Here are benchmarks that show what is slow and fast.
+Thanks to all the comments on and discussion on [reddit](https://www.reddit.com/r/rust/comments/48fmta/seven_ways_to_concatenate_strings_in_rust_the/) where I posted these originally only 7 benchmarks. Some go into the details of what is going on in the background of these operations.
 
 ## Results on my machine
 
@@ -28,6 +29,8 @@ test to_owned_plus_op                             ... bench:          55 ns/iter
 test to_string_plus_op                            ... bench:          86 ns/iter (+/- 3)
 test write_macro                                  ... bench:         109 ns/iter (+/- 2)
 ```
+
+Thanks also to @llogiq for posting his [numbers](https://github.com/hoodie/concatenation_benchmarks-rs/pull/2#issuecomment-192680412)
 
 ## Examples so far
 
