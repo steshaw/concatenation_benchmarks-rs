@@ -1,11 +1,32 @@
 #![feature(test)]
+#![feature(convert)]
+
 extern crate test;
 
 static DATE: &'static str = "2014-11-28";
+static T   : &'static str = "T";
 static TIME: &'static str = "12:00:09Z";
 
 
 use test::Bencher;
+
+#[bench]
+fn very_unsafe(b: &mut Bencher) {
+    use std::slice;
+    use std::ffi::OsString;
+    b.iter(|| {
+
+        let bytes = unsafe{
+            slice::from_raw_parts(DATE.as_ptr(), 20)
+        };
+
+        let datetime = OsString::from_bytes(bytes)
+            .and_then(|osstr|osstr.into_string().ok())
+            .unwrap();
+
+        test::black_box(datetime);
+    });
+}
 
 #[bench]
 fn format_macro(b: &mut Bencher) {
