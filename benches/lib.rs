@@ -6,6 +6,7 @@ extern crate test;
 static DATE: &'static str = "2014-11-28";
 static T   : &'static str = "T";
 static TIME: &'static str = "12:00:09Z";
+static DATETIME: &'static str = "2014-11-28T12:00:09Z";
 
 
 use test::Bencher;
@@ -23,6 +24,22 @@ fn very_unsafe(b: &mut Bencher) {
         let datetime = OsString::from_bytes(bytes)
             .and_then(|osstr|osstr.into_string().ok())
             .unwrap();
+
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
+fn very_unsafe_no_convert(b: &mut Bencher) {
+    use std::slice;
+    use std::ffi::OsString;
+    b.iter(|| {
+
+        let bytes = unsafe{
+            slice::from_raw_parts(DATE.as_ptr(), 20)
+        };
+
+        let datetime = OsString::from_bytes(bytes);
 
         test::black_box(datetime);
     });
