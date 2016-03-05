@@ -74,6 +74,26 @@ fn mut_string_with_capacity_push_str_char(b: &mut Bencher) {
         let mut datetime = String::with_capacity(20);
         datetime.push_str(DATE);
         datetime.push('T');
+    });
+}
+
+#[bench]
+fn mut_string_with_too_little_capacity_push_str(b: &mut Bencher){
+    b.iter(||{
+        let mut datetime = String::with_capacity(2);
+        datetime.push_str(DATE);
+        datetime.push_str("T");
+        datetime.push_str(TIME);
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
+fn mut_string_with_too_much_capacity_push_str(b: &mut Bencher){
+    b.iter(||{
+        let mut datetime = String::with_capacity(200);
+        datetime.push_str(DATE);
+        datetime.push_str("T");
         datetime.push_str(TIME);
         test::black_box(datetime);
     });
@@ -118,21 +138,27 @@ fn array_join(b: &mut Bencher) {
     });
 }
 
-// funny, the presence of this benchmark makes the join() version slower
-//#[bench]
-//fn array_connect(b: &mut Bencher) {
-//    b.iter(|| {
-//        let datetime:&str = &[ DATE, TIME ].connect("T");
-//        test::black_box(datetime);
-//    });
-//}
+#[bench]
+fn array_connect(b: &mut Bencher) {
+    b.iter(|| {
+        let datetime:&str = &[ DATE, TIME ].connect("T");
+        test::black_box(datetime);
+    });
+}
 
-// adding this one also makes array_join() slower
-//#[bench]
-//fn array_join_long(b: &mut Bencher) {
-//    b.iter(|| {
-//        let datetime:&str = &[ DATE, "T", TIME ].join("");
-//        test::black_box(datetime);
-//    });
-//}
+#[bench]
+fn array_join_long(b: &mut Bencher) {
+    b.iter(|| {
+        let datetime:&str = &[ DATE, "T", TIME ].join("");
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
+fn array_join_empty_arg(b: &mut Bencher) {
+    b.iter(||{
+        let datetime:&str = &[ DATE, "T", TIME ].join("");
+        test::black_box(datetime);
+    });
+}
 

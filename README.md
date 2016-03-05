@@ -9,21 +9,24 @@ Here are benchmarks that show what is slow and fast.
 ```
 $ cargo bench
 
-running 12 tests
-test array_concat                      ... bench:          48 ns/iter (+/- 14)
-test array_join                        ... bench:          51 ns/iter (+/- 4)
-test array_join_empty_arg              ... bench:          49 ns/iter (+/- 3)
-test format_macro                      ... bench:         115 ns/iter (+/- 8)
-test mut_string_push_str               ... bench:          50 ns/iter (+/- 9)
-test mut_string_push_string            ... bench:         121 ns/iter (+/- 5)
-test mut_string_with_capacity_push_str ... bench:          19 ns/iter (+/- 2)
-test string_from_all                   ... bench:          48 ns/iter (+/- 8)
-test string_from_plus_op               ... bench:          51 ns/iter (+/- 6)
-test to_owned_plus_op                  ... bench:          58 ns/iter (+/- 4)
-test to_string_plus_op                 ... bench:          88 ns/iter (+/- 3)
-test write_macro                       ... bench:         117 ns/iter (+/- 54)
-
-test result: ok. 0 passed; 0 failed; 0 ignored; 12 measured
+running 17 tests
+test array_concat                                 ... bench:          45 ns/iter (+/- 3)
+test array_connect                                ... bench:          44 ns/iter (+/- 2)
+test array_join                                   ... bench:          44 ns/iter (+/- 2)
+test array_join_empty_arg                         ... bench:          45 ns/iter (+/- 2)
+test array_join_long                              ... bench:          45 ns/iter (+/- 7)
+test format_macro                                 ... bench:         112 ns/iter (+/- 12)
+test mut_string_push_str                          ... bench:          51 ns/iter (+/- 4)
+test mut_string_push_string                       ... bench:         118 ns/iter (+/- 8)
+test mut_string_with_capacity_push_str            ... bench:          21 ns/iter (+/- 3)
+test mut_string_with_capacity_push_str_char       ... bench:           0 ns/iter (+/- 0) // questionable
+test mut_string_with_too_little_capacity_push_str ... bench:          75 ns/iter (+/- 5)
+test mut_string_with_too_much_capacity_push_str   ... bench:          18 ns/iter (+/- 1)
+test string_from_all                              ... bench:          50 ns/iter (+/- 3)
+test string_from_plus_op                          ... bench:          48 ns/iter (+/- 4)
+test to_owned_plus_op                             ... bench:          55 ns/iter (+/- 4)
+test to_string_plus_op                            ... bench:          86 ns/iter (+/- 3)
+test write_macro                                  ... bench:         109 ns/iter (+/- 2)
 ```
 
 ## Examples so far
@@ -135,4 +138,5 @@ let datetime = &(DATE.to_owned() + "T" + TIME);
 ## Contribution
 
 I'd be happy to add more benchmarks if you send me PRs with other ways to do it.
+
 
