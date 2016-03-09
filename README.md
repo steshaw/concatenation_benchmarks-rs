@@ -10,24 +10,28 @@ Thanks to all the comments on and discussion on [reddit](https://www.reddit.com/
 ```
 $ cargo bench
 
-running 17 tests
-test array_concat                                 ... bench:          45 ns/iter (+/- 3)
-test array_connect                                ... bench:          44 ns/iter (+/- 2)
-test array_join                                   ... bench:          44 ns/iter (+/- 2)
-test array_join_empty_arg                         ... bench:          45 ns/iter (+/- 2)
-test array_join_long                              ... bench:          45 ns/iter (+/- 7)
-test format_macro                                 ... bench:         112 ns/iter (+/- 12)
-test mut_string_push_str                          ... bench:          51 ns/iter (+/- 4)
-test mut_string_push_string                       ... bench:         118 ns/iter (+/- 8)
-test mut_string_with_capacity_push_str            ... bench:          21 ns/iter (+/- 3)
-test mut_string_with_capacity_push_str_char       ... bench:           0 ns/iter (+/- 0) // questionable
-test mut_string_with_too_little_capacity_push_str ... bench:          75 ns/iter (+/- 5)
-test mut_string_with_too_much_capacity_push_str   ... bench:          18 ns/iter (+/- 1)
-test string_from_all                              ... bench:          50 ns/iter (+/- 3)
-test string_from_plus_op                          ... bench:          48 ns/iter (+/- 4)
-test to_owned_plus_op                             ... bench:          55 ns/iter (+/- 4)
-test to_string_plus_op                            ... bench:          86 ns/iter (+/- 3)
-test write_macro                                  ... bench:         109 ns/iter (+/- 2)
+running 19 tests
+test array_concat                                 ... bench:          44 ns/iter (+/- 0)
+test array_connect                                ... bench:          44 ns/iter (+/- 1)
+test array_join                                   ... bench:          44 ns/iter (+/- 1)
+test array_join_empty_arg                         ... bench:          44 ns/iter (+/- 3)
+test array_join_long                              ... bench:          46 ns/iter (+/- 7)
+test format_macro                                 ... bench:         116 ns/iter (+/- 2)
+test mut_string_push_str                          ... bench:          53 ns/iter (+/- 1)
+test mut_string_push_string                       ... bench:         120 ns/iter (+/- 2)
+test mut_string_with_capacity_push_str            ... bench:          19 ns/iter (+/- 1)
+test mut_string_with_capacity_push_str_char       ... bench:          19 ns/iter (+/- 0)
+test mut_string_with_too_little_capacity_push_str ... bench:          84 ns/iter (+/- 5)
+test mut_string_with_too_much_capacity_push_str   ... bench:          19 ns/iter (+/- 0)
+test string_from_all                              ... bench:          50 ns/iter (+/- 2)
+test string_from_plus_op                          ... bench:          55 ns/iter (+/- 7)
+test to_owned_plus_op                             ... bench:          62 ns/iter (+/- 1)
+test to_string_plus_op                            ... bench:          94 ns/iter (+/- 9)
+test very_unsafe                                  ... bench:          55 ns/iter (+/- 1)
+test very_unsafe_no_convert                       ... bench:          31 ns/iter (+/- 0)
+test write_macro                                  ... bench:         121 ns/iter (+/- 22)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 19 measured
 ```
 
 Thanks also to @llogiq for posting his [numbers](https://github.com/hoodie/concatenation_benchmarks-rs/pull/2#issuecomment-192680412)
@@ -141,5 +145,6 @@ let datetime = &(DATE.to_owned() + "T" + TIME);
 ## Contribution
 
 I'd be happy to add more benchmarks if you send me PRs with other ways to do it.
+
 
 
