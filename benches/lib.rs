@@ -112,6 +112,7 @@ fn mut_string_with_capacity_push_str_char(b: &mut Bencher) {
         let mut datetime = String::with_capacity(20);
         datetime.push_str(DATE);
         datetime.push('T');
+        test::black_box(datetime);
     });
 }
 
