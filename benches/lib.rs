@@ -1,5 +1,5 @@
 #![feature(test)]
-#![feature(convert)]
+#![allow(dead_code)]
 
 extern crate test;
 
@@ -10,40 +10,6 @@ static DATETIME: &'static str = "2014-11-28T12:00:09Z";
 
 
 use test::Bencher;
-
-#[bench]
-fn very_unsafe(b: &mut Bencher) {
-    use std::slice;
-    use std::ffi::OsString;
-    b.iter(|| {
-
-        let bytes = unsafe{
-            slice::from_raw_parts(DATE.as_ptr(), 20)
-        };
-
-        let datetime = OsString::from_bytes(bytes)
-            .and_then(|osstr|osstr.into_string().ok())
-            .unwrap();
-
-        test::black_box(datetime);
-    });
-}
-
-#[bench]
-fn very_unsafe_no_convert(b: &mut Bencher) {
-    use std::slice;
-    use std::ffi::OsString;
-    b.iter(|| {
-
-        let bytes = unsafe{
-            slice::from_raw_parts(DATE.as_ptr(), 20)
-        };
-
-        let datetime = OsString::from_bytes(bytes);
-
-        test::black_box(datetime);
-    });
-}
 
 #[bench]
 fn format_macro(b: &mut Bencher) {
@@ -173,14 +139,6 @@ fn array_concat(b: &mut Bencher) {
 fn array_join(b: &mut Bencher) {
     b.iter(|| {
         let datetime:&str = &[ DATE, TIME ].join("T");
-        test::black_box(datetime);
-    });
-}
-
-#[bench]
-fn array_connect(b: &mut Bencher) {
-    b.iter(|| {
-        let datetime:&str = &[ DATE, TIME ].connect("T");
         test::black_box(datetime);
     });
 }
