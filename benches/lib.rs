@@ -12,6 +12,15 @@ static DATETIME: &'static str = "2014-11-28T12:00:09Z";
 use test::Bencher;
 
 #[bench]
+fn collect_to_string(b: &mut Bencher) {
+    let list = vec![DATE,T,TIME];
+    b.iter(|| {
+        let datetime:String = list.iter().map(|x|*x).collect();
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
 fn format_macro(b: &mut Bencher) {
     b.iter(|| {
         let datetime:&str = &format!("{}T{}", DATE, TIME);
@@ -111,7 +120,7 @@ fn mut_string_push_string(b: &mut Bencher) {
         datetime.push(String::from(DATE));
         datetime.push(String::from("T"));
         datetime.push(String::from(TIME));
-        let datetime = datetime.join("");
+        let datetime = datetime.connect("");
         test::black_box(datetime);
     });
 }
@@ -136,25 +145,25 @@ fn array_concat(b: &mut Bencher) {
 }
 
 #[bench]
-fn array_join(b: &mut Bencher) {
+fn array_connect(b: &mut Bencher) {
     b.iter(|| {
-        let datetime:&str = &[ DATE, TIME ].join("T");
+        let datetime:&str = &[ DATE, TIME ].connect("T");
         test::black_box(datetime);
     });
 }
 
 #[bench]
-fn array_join_long(b: &mut Bencher) {
+fn array_connect_long(b: &mut Bencher) {
     b.iter(|| {
-        let datetime:&str = &[ DATE, "T", TIME ].join("");
+        let datetime:&str = &[ DATE, "T", TIME ].connect("");
         test::black_box(datetime);
     });
 }
 
 #[bench]
-fn array_join_empty_arg(b: &mut Bencher) {
+fn array_connect_empty_arg(b: &mut Bencher) {
     b.iter(||{
-        let datetime:&str = &[ DATE, "T", TIME ].join("");
+        let datetime:&str = &[ DATE, "T", TIME ].connect("");
         test::black_box(datetime);
     });
 }
