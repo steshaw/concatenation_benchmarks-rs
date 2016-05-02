@@ -12,6 +12,15 @@ static DATETIME: &'static str = "2014-11-28T12:00:09Z";
 use test::Bencher;
 
 #[bench]
+fn collect_to_string(b: &mut Bencher) {
+    let list = vec![DATE,T,TIME];
+    b.iter(|| {
+        let datetime:String = list.iter().map(|x|*x).collect();
+        test::black_box(datetime);
+    });
+}
+
+#[bench]
 fn format_macro(b: &mut Bencher) {
     b.iter(|| {
         let datetime:&str = &format!("{}T{}", DATE, TIME);
