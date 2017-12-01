@@ -168,3 +168,19 @@ fn array_join_empty_arg(b: &mut Bencher) {
     });
 }
 
+#[bench]
+#[cfg(unix)]
+fn from_bytes(b: &mut Bencher) {
+    use std::slice;
+    use std::ffi::OsStr;
+    use std::os::unix::ffi::OsStrExt;
+
+    b.iter(|| {
+                let bytes = unsafe {
+                    slice::from_raw_parts(DATE.as_ptr(), 20)
+                };
+
+                let datetime = OsStr::from_bytes(bytes);
+                test::black_box(datetime);
+           });
+}

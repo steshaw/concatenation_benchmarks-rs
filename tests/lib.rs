@@ -10,19 +10,17 @@ static DATETIME: &'static str = "2014-11-28T12:00:09Z";
 
 
 #[test]
-fn very_unsafe() {
+fn from_bytes() {
     use std::slice;
-    use std::ffi::OsString;
+    use std::ffi::OsStr;
+    use std::os::unix::ffi::OsStrExt;
 
-    let bytes = unsafe{
-        slice::from_raw_parts(DATE.as_ptr(), 20)
-    };
+    let bytes = unsafe { slice::from_raw_parts(DATE.as_ptr(), 20) };
 
-    let datetime = OsString::from_bytes(bytes);
-        .and_then(|osstr|osstr.into_string().ok())
-        .unwrap();
+    let datetime = OsStr::from_bytes(bytes);
 
-    assert_eq!(String::from(DATETIME),datetime);
+    assert_eq!(String::from(DATETIME),
+               datetime.to_owned().into_string().unwrap());
 }
 
 #[test]
@@ -145,4 +143,3 @@ fn array_join_empty_arg() {
     let datetime:&str = &[ DATE, "T", TIME ].join("");
     assert_eq!(String::from(DATETIME),datetime);
 }
-
