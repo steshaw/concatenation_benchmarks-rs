@@ -1,12 +1,11 @@
 #![feature(test)]
-#![feature(convert)]
 
 extern crate test;
 
-static DATE: &'static str = "2014-11-28";
-static T   : &'static str = "T";
-static TIME: &'static str = "12:00:09Z";
-static DATETIME: &'static str = "2014-11-28T12:00:09Z";
+static DATE: &str = "2014-11-28";
+static T   : &str = "T";
+static TIME: &str = "12:00:09Z";
+static DATETIME: &str = "2014-11-28T12:00:09Z";
 
 
 #[test]
@@ -25,25 +24,25 @@ fn from_bytes() {
 
 #[test]
 fn format_macro() {
-    let datetime:&str = &format!("{}T{}", DATE, TIME);
+    let datetime:&str = &format!("{}{}{}", DATE, T, TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
 #[test]
 fn to_string_plus_op() {
-    let datetime:&str = &(DATE.to_string() + "T" + TIME);
+    let datetime:&str = &(DATE.to_string() + T + TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
 #[test]
 fn to_owned_plus_op() {
-    let datetime:&str = &(DATE.to_owned() + "T" + TIME);
+    let datetime:&str = &(DATE.to_owned() + T + TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
 #[test]
 fn string_from_plus_op() {
-    let datetime:&str = &(String::from(DATE) + "T" + TIME);
+    let datetime:&str = &(String::from(DATE) + T + TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
@@ -65,7 +64,7 @@ fn string_from_all() {
 fn mut_string_with_capacity_push_str() {
     let mut datetime = String::with_capacity(20);
     datetime.push_str(DATE);
-    datetime.push_str("T");
+    datetime.push_str(T);
     datetime.push_str(TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
@@ -81,7 +80,7 @@ fn mut_string_with_capacity_push_str_char() {
 fn mut_string_with_too_little_capacity_push_str(){
     let mut datetime = String::with_capacity(2);
     datetime.push_str(DATE);
-    datetime.push_str("T");
+    datetime.push_str(T);
     datetime.push_str(TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
@@ -90,7 +89,7 @@ fn mut_string_with_too_little_capacity_push_str(){
 fn mut_string_with_too_much_capacity_push_str(){
     let mut datetime = String::with_capacity(200);
     datetime.push_str(DATE);
-    datetime.push_str("T");
+    datetime.push_str(T);
     datetime.push_str(TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
@@ -99,7 +98,7 @@ fn mut_string_with_too_much_capacity_push_str(){
 fn mut_string_push_string() {
     let mut datetime = Vec::<String>::new();
     datetime.push(String::from(DATE));
-    datetime.push(String::from("T"));
+    datetime.push(String::from(T));
     datetime.push(String::from(TIME));
     let datetime = datetime.join("");
     assert_eq!(String::from(DATETIME),datetime);
@@ -109,26 +108,26 @@ fn mut_string_push_string() {
 fn mut_string_push_str() {
     let mut datetime = String::new();
     datetime.push_str(DATE);
-    datetime.push_str("T");
+    datetime.push_str(T);
     datetime.push_str(TIME);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
 #[test]
 fn array_concat() {
-    let datetime:&str = &[ DATE, "T", TIME ].concat();
+    let datetime:&str = &[ DATE, T, TIME ].concat();
     assert_eq!(String::from(DATETIME),datetime);
 }
 
 #[test]
 fn array_join() {
-    let datetime:&str = &[ DATE, TIME ].join("T");
+    let datetime:&str = &[ DATE, TIME ].join(T);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
 #[test]
 fn array_connect() {
-    let datetime:&str = &[ DATE, TIME ].connect("T");
+    let datetime:&str = &[ DATE, TIME ].join(T);
     assert_eq!(String::from(DATETIME),datetime);
 }
 
