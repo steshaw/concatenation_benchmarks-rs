@@ -2,3 +2,6 @@
 name = "concatenation_benchmarks"
 version = "0.1.0"
 authors = ["Hendrik Sollich <hendrik@hoodie.de>"]
+
+[dev-dependencies]
+criterion = "0.1"
