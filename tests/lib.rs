@@ -131,6 +131,6 @@ fn array_join_long() {
 
 #[test]
 fn array_join_empty_arg() {
-    let datetime: &str = &[DATE, "T", TIME].join("");
+    let datetime: &str = &[DATE, "T", TIME].join();
     assert_eq!(String::from(DATETIME), datetime);
 }

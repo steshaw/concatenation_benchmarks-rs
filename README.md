@@ -16,28 +16,28 @@ Thanks to all the comments on and discussion on [reddit](https://www.reddit.com/
 ```
 $ cargo bench
 
-running 19 tests
-test array_concat                                 ... bench:          44 ns/iter (+/- 0)
-test array_connect                                ... bench:          44 ns/iter (+/- 1)
-test array_join                                   ... bench:          44 ns/iter (+/- 1)
-test array_join_empty_arg                         ... bench:          44 ns/iter (+/- 3)
-test array_join_long                              ... bench:          46 ns/iter (+/- 7)
-test format_macro                                 ... bench:         116 ns/iter (+/- 2)
-test mut_string_push_str                          ... bench:          53 ns/iter (+/- 1)
-test mut_string_push_string                       ... bench:         120 ns/iter (+/- 2)
-test mut_string_with_capacity_push_str            ... bench:          19 ns/iter (+/- 1)
-test mut_string_with_capacity_push_str_char       ... bench:          19 ns/iter (+/- 0)
-test mut_string_with_too_little_capacity_push_str ... bench:          84 ns/iter (+/- 5)
-test mut_string_with_too_much_capacity_push_str   ... bench:          19 ns/iter (+/- 0)
-test string_from_all                              ... bench:          50 ns/iter (+/- 2)
-test string_from_plus_op                          ... bench:          55 ns/iter (+/- 7)
-test to_owned_plus_op                             ... bench:          62 ns/iter (+/- 1)
-test to_string_plus_op                            ... bench:          94 ns/iter (+/- 9)
-test very_unsafe                                  ... bench:          55 ns/iter (+/- 1)
-test very_unsafe_no_convert                       ... bench:          31 ns/iter (+/- 0)
-test write_macro                                  ... bench:         121 ns/iter (+/- 22)
+running 18 tests
+test array_concat                                 ... bench:          34 ns/iter (+/- 20)
+test array_join                                   ... bench:          36 ns/iter (+/- 8)
+test array_join_empty_arg                         ... bench:          34 ns/iter (+/- 20)
+test array_join_long                              ... bench:          33 ns/iter (+/- 17)
+test collect_to_string                            ... bench:          75 ns/iter (+/- 37)
+test format_macro                                 ... bench:         106 ns/iter (+/- 56)
+test from_bytes                                   ... bench:           1 ns/iter (+/- 0)
+test mut_string_push_str                          ... bench:          67 ns/iter (+/- 22)
+test mut_string_push_string                       ... bench:         170 ns/iter (+/- 38)
+test mut_string_with_capacity_push_str            ... bench:          30 ns/iter (+/- 22)
+test mut_string_with_capacity_push_str_char       ... bench:          25 ns/iter (+/- 15)
+test mut_string_with_too_little_capacity_push_str ... bench:          93 ns/iter (+/- 16)
+test mut_string_with_too_much_capacity_push_str   ... bench:          30 ns/iter (+/- 14)
+test string_from_all                              ... bench:         130 ns/iter (+/- 62)
+test string_from_plus_op                          ... bench:          72 ns/iter (+/- 42)
+test to_owned_plus_op                             ... bench:          72 ns/iter (+/- 45)
+test to_string_plus_op                            ... bench:          72 ns/iter (+/- 18)
+test write_macro                                  ... bench:         109 ns/iter (+/- 60)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 19 measured
+test result: ok. 0 passed; 0 failed; 0 ignored; 18 measured; 0 filtered out
+
 ```
 
 Thanks also to @llogiq for posting his [numbers](https://github.com/hoodie/concatenation_benchmarks-rs/pull/2#issuecomment-192680412)
@@ -62,7 +62,7 @@ let datetime = "2014-11-28T12:00:09Z";
 let datetime = [ DATE, "T", TIME ].concat();
 ```
 
-~49ns
+
 
 ### array `.join()`
 
@@ -70,7 +70,7 @@ let datetime = [ DATE, "T", TIME ].concat();
 let datetime = [ DATE, TIME ].join("T");
 ```
 
-~51ns
+
 
 Or with an empty `str` as argument
 
@@ -78,7 +78,7 @@ Or with an empty `str` as argument
 let datetime:&str = &[ DATE, "T", TIME ].join("");
 ```
 
-~49ns
+
 
 ### `format!` macro
 
@@ -87,7 +87,7 @@ let datetime:&str = &[ DATE, "T", TIME ].join("");
 let datetime = format!("{}T{}", DATE, TIME);
 ```
 
-~115ns
+
 
 ### `push_str()` into `mut String`
 
@@ -98,7 +98,7 @@ let mut datetime = String::new();
         datetime.push_str(TIME);
 ```
 
-~50ns
+
 
 ### `push()` into `mut Vec<String>`
 
@@ -110,7 +110,7 @@ datetime.push(String::from(TIME));
 let datetime = datetime.join("");
 ```
 
-Nope, this one is really expensive: ~121ns
+
 
 ### `push_str()` into `mut String::with_capacity()`
 
@@ -123,7 +123,7 @@ datetime.push_str(TIME);
 
 Ladies and Gentlemen, we have a winner!
 
-~19ns
+
 
 ### `String::from()` and +operator
 
@@ -131,7 +131,7 @@ Ladies and Gentlemen, we have a winner!
 let datetime = &(String::from(DATE) + "T" + TIME);
 ```
 
-~51ns
+
 
 ### `.to_string()` and +operator
 
@@ -140,7 +140,7 @@ let datetime = &(String::from(DATE) + "T" + TIME);
 let datetime = &(DATE.to_string() + "T" + TIME);
 ```
 
-~88ns
+
 
 ### `.to_owned()` and +operator
 
