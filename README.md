@@ -1,156 +1,182 @@
 # Comparing ways to concatenate strings in Rust
-
-## DISCLAIMER
-
-These numbers are already a bit dated - **your results may vary** - so please rerun these numbers yourself!
-
 ## Intro
 
 There are many ways to turn a `&str` into a `String` in Rust and therefore many ways to concatenate two `&str`s.
 
-Here are benchmarks that show what is slow and fast.
+Here I benchmark several different ways to concatenate the strings `"2014-11-28"`, `"T"` and `"12:00:09Z"` into `"2014-11-28T12:00:09Z"`.
+
 Thanks to all the comments on and discussion on [reddit](https://www.reddit.com/r/rust/comments/48fmta/seven_ways_to_concatenate_strings_in_rust_the/) where I posted these originally only 7 benchmarks. Some go into the details of what is going on in the background of these operations.
 
-## Results on my machine
 
-```
+## How to run?
+
+* benchmarks: `cargo bench`
+* tests: `cargo test --benches`
+
+
+## Results (on my machine)
+
+```bash
 $ cargo bench
 
-running 18 tests
-test array_concat                                 ... bench:          34 ns/iter (+/- 20)
-test array_join                                   ... bench:          36 ns/iter (+/- 8)
-test array_join_empty_arg                         ... bench:          34 ns/iter (+/- 20)
-test array_join_long                              ... bench:          33 ns/iter (+/- 17)
-test collect_to_string                            ... bench:          75 ns/iter (+/- 37)
-test format_macro                                 ... bench:         106 ns/iter (+/- 56)
+running 32 tests
+test array_concat_test ... ignored
+test array_join_long_test ... ignored
+test array_join_test ... ignored
+test collect_to_string_test ... ignored
+test format_macro_test ... ignored
+test from_bytes_test ... ignored
+test mut_string_push_str_test ... ignored
+test mut_string_push_string_test ... ignored
+test mut_string_with_capacity_push_str_char_test ... ignored
+test mut_string_with_capacity_push_str_test ... ignored
+test mut_string_with_too_little_capacity_push_str_test ... ignored
+test mut_string_with_too_much_capacity_push_str_test ... ignored
+test string_from_all_test ... ignored
+test string_from_plus_op_test ... ignored
+test to_owned_plus_op_test ... ignored
+test to_string_plus_op_test ... ignored
+test array_concat                                 ... bench:          43 ns/iter (+/- 14)
+test array_join                                   ... bench:          42 ns/iter (+/- 11)
+test array_join_long                              ... bench:          40 ns/iter (+/- 18)
+test collect_to_string                            ... bench:          84 ns/iter (+/- 20)
+test format_macro                                 ... bench:         112 ns/iter (+/- 34)
 test from_bytes                                   ... bench:           1 ns/iter (+/- 0)
-test mut_string_push_str                          ... bench:          67 ns/iter (+/- 22)
-test mut_string_push_string                       ... bench:         170 ns/iter (+/- 38)
-test mut_string_with_capacity_push_str            ... bench:          30 ns/iter (+/- 22)
-test mut_string_with_capacity_push_str_char       ... bench:          25 ns/iter (+/- 15)
-test mut_string_with_too_little_capacity_push_str ... bench:          93 ns/iter (+/- 16)
-test mut_string_with_too_much_capacity_push_str   ... bench:          30 ns/iter (+/- 14)
-test string_from_all                              ... bench:         130 ns/iter (+/- 62)
-test string_from_plus_op                          ... bench:          72 ns/iter (+/- 42)
-test to_owned_plus_op                             ... bench:          72 ns/iter (+/- 45)
-test to_string_plus_op                            ... bench:          72 ns/iter (+/- 18)
-test write_macro                                  ... bench:         109 ns/iter (+/- 60)
+test mut_string_push_str                          ... bench:          81 ns/iter (+/- 22)
+test mut_string_push_string                       ... bench:         170 ns/iter (+/- 53)
+test mut_string_with_capacity_push_str            ... bench:          37 ns/iter (+/- 11)
+test mut_string_with_capacity_push_str_char       ... bench:          30 ns/iter (+/- 4)
+test mut_string_with_too_little_capacity_push_str ... bench:         114 ns/iter (+/- 41)
+test mut_string_with_too_much_capacity_push_str   ... bench:          39 ns/iter (+/- 27)
+test string_from_all                              ... bench:         149 ns/iter (+/- 28)
+test string_from_plus_op                          ... bench:          85 ns/iter (+/- 37)
+test to_owned_plus_op                             ... bench:          80 ns/iter (+/- 40)
+test to_string_plus_op                            ... bench:          78 ns/iter (+/- 13)
 
-test result: ok. 0 passed; 0 failed; 0 ignored; 18 measured; 0 filtered out
-
+test result: ok. 0 passed; 0 failed; 16 ignored; 16 measured; 0 filtered out
 ```
 
-Thanks also to @llogiq for posting his [numbers](https://github.com/hoodie/concatenation_benchmarks-rs/pull/2#issuecomment-192680412)
+## Examples explained
 
-## Examples so far
 
+### `array_concat()`
+```rust
+let datetime = &[DATE, T, TIME].concat();
+```
+
+
+### `array_join()`
+```rust
+let datetime = &[DATE, TIME].join(T);
+```
+
+
+### `array_join_long()`
+```rust
+let datetime = &[DATE, T, TIME].join("");
+```
+
+
+### `collect_to_string()`
+```rust
+let list = vec![DATE, T, TIME];
+let datetime: String = list.iter().map(|x| *x).collect();
+```
+
+### `format_macro()`
 
 ```rust
-let DATE = "2014-11-28";
-let TIME = "12:00:09Z";
-
-// wanting to create
-
-let datetime = "2014-11-28T12:00:09Z";
-
+let datetime = &format!("{}{}{}", DATE, T, TIME);
 ```
 
-
-### array `.concat()`
+### `from_bytes() // ⚠️ don't actually do this
 
 ```rust
-let datetime = [ DATE, "T", TIME ].concat();
+use std::ffi::OsStr;
+use std::os::unix::ffi::OsStrExt;
+use std::slice;
+
+let bytes = unsafe { slice::from_raw_parts(DATE.as_ptr(), 20) };
+
+let datetime = OsStr::from_bytes(bytes);
 ```
 
-
-
-### array `.join()`
-
-```rust
-let datetime = [ DATE, TIME ].join("T");
-```
-
-
-
-Or with an empty `str` as argument
-
-```rust
-let datetime:&str = &[ DATE, "T", TIME ].join("");
-```
-
-
-
-### `format!` macro
-
-
-```rust
-let datetime = format!("{}T{}", DATE, TIME);
-```
-
-
-
-### `push_str()` into `mut String`
+### `mut_string_push_str()`
 
 ```rust
 let mut datetime = String::new();
-        datetime.push_str(DATE);
-        datetime.push_str("T");
-        datetime.push_str(TIME);
+datetime.push_str(DATE);
+datetime.push_str(T);
+datetime.push_str(TIME);
 ```
 
-
-
-### `push()` into `mut Vec<String>`
+### `mut_string_push_string()`
 
 ```rust
 let mut datetime = Vec::<String>::new();
 datetime.push(String::from(DATE));
-datetime.push(String::from("T"));
+datetime.push(String::from(T));
 datetime.push(String::from(TIME));
 let datetime = datetime.join("");
 ```
 
-
-
-### `push_str()` into `mut String::with_capacity()`
+### `mut_string_with_capacity_push_str()`
 
 ```rust
 let mut datetime = String::with_capacity(20);
 datetime.push_str(DATE);
-datetime.push_str("T");
+datetime.push_str(T);
 datetime.push_str(TIME);
 ```
 
-Ladies and Gentlemen, we have a winner!
-
-
-
-### `String::from()` and +operator
+### `mut_string_with_capacity_push_str_char()`
 
 ```rust
-let datetime = &(String::from(DATE) + "T" + TIME);
+let mut datetime = String::with_capacity(20);
+datetime.push_str(DATE);
+datetime.push('T');
+datetime.push_str(TIME);
 ```
 
-
-
-### `.to_string()` and +operator
-
+### `mut_string_with_too_little_capacity_push_str()`
 
 ```rust
-let datetime = &(DATE.to_string() + "T" + TIME);
+let mut datetime = String::with_capacity(2);
+datetime.push_str(DATE);
+datetime.push_str(T);
+datetime.push_str(TIME);
 ```
 
-
-
-### `.to_owned()` and +operator
+### `mut_string_with_too_much_capacity_push_str()`
 
 ```rust
-let datetime = &(DATE.to_owned() + "T" + TIME);
+let mut datetime = String::with_capacity(200);
+datetime.push_str(DATE);
+datetime.push_str(T);
+datetime.push_str(TIME);
 ```
 
-## Contribution
+### `string_from_all()`
 
-I'd be happy to add more benchmarks if you send me PRs with other ways to do it.
+```rust
+let datetime = &(String::from(DATE) + &String::from(T) + &String::from(TIME));
+```
 
+### `string_from_plus_op()`
 
+```rust
+let datetime = &(String::from(DATE) + T + TIME);
+```
+
+### `to_owned_plus_op()`
+
+```rust
+let datetime = &(DATE.to_owned() + T + TIME);
+```
+
+### `to_string_plus_op()`
+
+```rust
+let datetime = &(DATE.to_string() + T + TIME);
+```
 
