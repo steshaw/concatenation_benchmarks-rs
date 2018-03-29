@@ -19,11 +19,12 @@ Thanks to all the comments on and discussion on [reddit](https://www.reddit.com/
 ```bash
 $ cargo bench
 
-running 32 tests
+running 34 tests
 test array_concat_test ... ignored
 test array_join_long_test ... ignored
 test array_join_test ... ignored
-test collect_to_string_test ... ignored
+test collect_from_array_to_string_test ... ignored
+test collect_from_vec_to_string_test ... ignored
 test format_macro_test ... ignored
 test from_bytes_test ... ignored
 test mut_string_push_str_test ... ignored
@@ -36,24 +37,25 @@ test string_from_all_test ... ignored
 test string_from_plus_op_test ... ignored
 test to_owned_plus_op_test ... ignored
 test to_string_plus_op_test ... ignored
-test array_concat                                 ... bench:          43 ns/iter (+/- 14)
-test array_join                                   ... bench:          42 ns/iter (+/- 11)
-test array_join_long                              ... bench:          40 ns/iter (+/- 18)
-test collect_to_string                            ... bench:          84 ns/iter (+/- 20)
-test format_macro                                 ... bench:         112 ns/iter (+/- 34)
+test array_concat                                 ... bench:          38 ns/iter (+/- 27)
+test array_join                                   ... bench:          38 ns/iter (+/- 22)
+test array_join_long                              ... bench:          35 ns/iter (+/- 18)
+test collect_from_array_to_string                 ... bench:          80 ns/iter (+/- 17)
+test collect_from_vec_to_string                   ... bench:          76 ns/iter (+/- 27)
+test format_macro                                 ... bench:         111 ns/iter (+/- 69)
 test from_bytes                                   ... bench:           1 ns/iter (+/- 0)
-test mut_string_push_str                          ... bench:          81 ns/iter (+/- 22)
-test mut_string_push_string                       ... bench:         170 ns/iter (+/- 53)
-test mut_string_with_capacity_push_str            ... bench:          37 ns/iter (+/- 11)
-test mut_string_with_capacity_push_str_char       ... bench:          30 ns/iter (+/- 4)
-test mut_string_with_too_little_capacity_push_str ... bench:         114 ns/iter (+/- 41)
-test mut_string_with_too_much_capacity_push_str   ... bench:          39 ns/iter (+/- 27)
-test string_from_all                              ... bench:         149 ns/iter (+/- 28)
-test string_from_plus_op                          ... bench:          85 ns/iter (+/- 37)
-test to_owned_plus_op                             ... bench:          80 ns/iter (+/- 40)
-test to_string_plus_op                            ... bench:          78 ns/iter (+/- 13)
+test mut_string_push_str                          ... bench:          75 ns/iter (+/- 35)
+test mut_string_push_string                       ... bench:         164 ns/iter (+/- 77)
+test mut_string_with_capacity_push_str            ... bench:          32 ns/iter (+/- 14)
+test mut_string_with_capacity_push_str_char       ... bench:          29 ns/iter (+/- 12)
+test mut_string_with_too_little_capacity_push_str ... bench:          96 ns/iter (+/- 11)
+test mut_string_with_too_much_capacity_push_str   ... bench:          37 ns/iter (+/- 8)
+test string_from_all                              ... bench:         133 ns/iter (+/- 101)
+test string_from_plus_op                          ... bench:          76 ns/iter (+/- 9)
+test to_owned_plus_op                             ... bench:          81 ns/iter (+/- 15)
+test to_string_plus_op                            ... bench:          83 ns/iter (+/- 17)
 
-test result: ok. 0 passed; 0 failed; 16 ignored; 16 measured; 0 filtered out
+test result: ok. 0 passed; 0 failed; 17 ignored; 17 measured; 0 filtered out
 ```
 
 ## Examples explained
@@ -77,7 +79,13 @@ let datetime = &[DATE, T, TIME].join("");
 ```
 
 
-### `collect_to_string()`
+### `collect_from_array_to_string()`
+```rust
+let list = [DATE, T, TIME];
+let datetime: String = list.iter().map(|x| *x).collect();
+```
+
+### `collect_from_vecto_string()`
 ```rust
 let list = vec![DATE, T, TIME];
 let datetime: String = list.iter().map(|x| *x).collect();

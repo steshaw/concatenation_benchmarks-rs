@@ -56,7 +56,24 @@ fn array_join_long_test() {
 
 ////
 #[bench]
-fn collect_to_string(b: &mut Bencher) {
+fn collect_from_array_to_string(b: &mut Bencher) {
+    let list = [DATE, T, TIME];
+    b.iter(|| {
+        let datetime: String = list.iter().map(|x| *x).collect();
+        test::black_box(datetime);
+    });
+}
+
+#[test]
+fn collect_from_array_to_string_test() {
+    let list = [DATE, T, TIME];
+    let datetime: String = list.iter().map(|x| *x).collect();
+    assert_eq!(String::from(DATETIME), datetime);
+}
+
+////
+#[bench]
+fn collect_from_vec_to_string(b: &mut Bencher) {
     let list = vec![DATE, T, TIME];
     b.iter(|| {
         let datetime: String = list.iter().map(|x| *x).collect();
@@ -65,7 +82,7 @@ fn collect_to_string(b: &mut Bencher) {
 }
 
 #[test]
-fn collect_to_string_test() {
+fn collect_from_vec_to_string_test() {
     let list = vec![DATE, T, TIME];
     let datetime: String = list.iter().map(|x| *x).collect();
     assert_eq!(String::from(DATETIME), datetime);
